@@ -1,4 +1,4 @@
-from test_app.models import Employee
+from test_app.models import Employee, Department
 from rest_framework.serializers import ModelSerializer
 from rest_framework.validators import ValidationError
 from rest_framework import status
@@ -11,7 +11,7 @@ class BaseSerializer(ModelSerializer):
 class EmployeeSerializer(BaseSerializer):
     class Meta:
         model = Employee
-        fields = BaseSerializer.Meta.fields + ['name', 'id_number', 'date_of_joining', 'salary', 'active']
+        fields = BaseSerializer.Meta.fields + ['name', 'id_number', 'date_of_joining', 'salary', 'department', 'designation', 'active']
 
     # Validation during processing a request
     def validate(self, attrs):
@@ -28,3 +28,9 @@ class EmployeeSerializer(BaseSerializer):
     # Logic should be implemented only during updating a record
     def update(self, instance, validated_data):
         return super().update(instance, validated_data)
+    
+class DepartmentSerializer(BaseSerializer):
+
+    class Meta:
+        model = Department
+        fields = BaseSerializer.Meta.fields + ['name', 'date_of_creation', 'employee_count', 'active']
