@@ -11,6 +11,9 @@ class Base(models.Model):
     class Meta:
         abstract = True
 
+    def __str__(self) -> str:
+        return str(self.name)
+
 class Department(Base):
     
     id = models.BigAutoField(primary_key=True, editable=False, null=False)
@@ -19,8 +22,19 @@ class Department(Base):
     employee_count = models.PositiveBigIntegerField(default=0)
     active = models.BooleanField(default=True)
 
-class Employee(Base):
+    def __str__(self) -> str:
+        return str(self.employee_count)
+    
+class Device(Base):
+    id_number = models.CharField(max_length=8, null=False)
+    type = models.CharField(max_length=32)
+    manufacturer = models.CharField(max_length=32)
+    active = models.BooleanField(default=True)
 
+    def __str__(self) -> str:
+        return str(self.id_number)
+
+class Employee(Base):
     class DESIGNATION(Enum):
         EXECUTIVE = 'executive'
         SENIOR = 'senior'
@@ -30,7 +44,10 @@ class Employee(Base):
         @classmethod
         def choices(cls):
             # [('executive', 'EXECUTIVE'), ('senior', 'SENIOR'), ...]
-            return [(key.value, key.name) for key in cls]
+            enum_choices = []
+            for enum in cls:
+                enum_choices.append((enum.value, enum.name))
+            return enum_choices
 
     # id = models.BigIntegerField(primary_key=True, db_index=True)
     name = models.CharField(max_length=32, db_index=True)
@@ -40,6 +57,4 @@ class Employee(Base):
     active = models.BooleanField(default=True)
     designation = models.CharField(max_length=16, choices=DESIGNATION.choices, null=True)
     department = models.ForeignKey(Department, on_delete=models.DO_NOTHING, related_name='employee', null=True)
-
-    class Meta:
-        db_table_comment = 'This contains Employee data'
+    device = models.ManyToManyField(Device)

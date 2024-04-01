@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import datetime, timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +26,7 @@ SECRET_KEY = 'django-insecure-sv3xcr414=xi8g2jskvdr_z@7ux241%!ysy-zav%o+=8r4cp)&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -42,7 +43,9 @@ DJANGO_INSTALLED_APPS = [
 
 # Third party apps for more functionality
 THIRD_PARTY_APPS = [
-    'rest_framework'
+    'rest_framework',
+    # 'oauth2_provider'
+    'rest_framework_simplejwt'
 ]
 
 # These are local apps
@@ -143,7 +146,25 @@ AUTH_USER_MODEL = 'users.User'
 
 
 # Third party app configurations
-rest_framework = {
+REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'test_project.utils.StandardResultsSetPagination',
-    'PAGE_SIZE': 20
+    'PAGE_SIZE': 20,
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # 'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
+    ],
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     'rest_framework.permissions.IsAuthenticated',
+    # )
+}
+
+# OAUTH2_PROVIDER = {
+#     # this is the list of available scopes
+#     'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'}
+# }
+
+# LOGIN_URL = '/admin/login/'
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=2)
 }

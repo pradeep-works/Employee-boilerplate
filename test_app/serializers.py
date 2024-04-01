@@ -1,4 +1,4 @@
-from test_app.models import Employee, Department
+from test_app.models import Employee, Department, Device
 from rest_framework.serializers import ModelSerializer
 from rest_framework.validators import ValidationError
 from rest_framework import status
@@ -11,7 +11,7 @@ class BaseSerializer(ModelSerializer):
 class EmployeeSerializer(BaseSerializer):
     class Meta:
         model = Employee
-        fields = BaseSerializer.Meta.fields + ['name', 'id_number', 'date_of_joining', 'salary', 'department', 'designation', 'active']
+        fields = BaseSerializer.Meta.fields + ['name', 'id_number', 'date_of_joining', 'salary', 'department', 'designation', 'device', 'active']
 
     # Validation during processing a request
     def validate(self, attrs):
@@ -34,3 +34,15 @@ class DepartmentSerializer(BaseSerializer):
     class Meta:
         model = Department
         fields = BaseSerializer.Meta.fields + ['name', 'date_of_creation', 'employee_count', 'active']
+
+class DeviceSerializer(BaseSerializer):
+    class Meta:
+        model = Device
+        fields = BaseSerializer.Meta.fields + ['id_number', 'type', 'manufacturer']
+
+    def validate(self, attrs):
+        id_number = attrs.get('id_number', None)
+        if id_number is not None:
+            id_number = str(id_number).upper()
+            attrs['id_number'] = id_number
+        return super().validate(attrs)

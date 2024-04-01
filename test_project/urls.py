@@ -16,10 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from test_app.views import router, Employee
+from test_app.views import router as test_app_router
+from users.views import router as users_router
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-]
+    # path('o/', include('oauth2_provider.urls', namespace="oauth2_provider")),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),]
 
-urlpatterns += router.urls
+urlpatterns += test_app_router.urls
+urlpatterns += users_router.urls
