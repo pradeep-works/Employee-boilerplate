@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from users.models import User, Group
 from users.serializers import UserSerializer, GroupSerializer
+from users.permission import IsAdminOnly
 # Create your views here.
 
 class UserViewset(ListModelMixin, CreateModelMixin, RetrieveModelMixin, \
@@ -17,12 +18,7 @@ class GroupViewset(ListModelMixin, CreateModelMixin, RetrieveModelMixin, \
                    UpdateModelMixin, GenericViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        user = self.request.user
-        print(user)
-        return super().get_queryset()
+    permission_classes = [IsAdminOnly]
 
 router = DefaultRouter()
 router.register("users", UserViewset, "users")

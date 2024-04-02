@@ -9,17 +9,19 @@ class Base(models.Model):
 
     class Meta:
         abstract = True
+
+class Group(Base):
+    name = models.CharField(max_length=16)
+
+    def __str__(self) -> str:
+        return str(self.name)
+
 class User(AbstractUser, Base):
     date_of_birth = models.DateField(null=True)
     mobile = models.CharField(max_length=16, null=True)
     gender = models.CharField(max_length=1, default='U')
     address = models.CharField(max_length=256, null=True)
+    groups = models.ManyToManyField(Group)
 
     def __str__(self) -> str:
         return str(self.username)
-
-class Group(models.Model):
-    name = models.CharField(max_length=16)
-
-    def __str__(self) -> str:
-        return str(self.name)
